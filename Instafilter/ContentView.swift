@@ -52,44 +52,37 @@ struct ContentView: View {
                     if inputKeys.contains(kCIInputIntensityKey) {
                         HStack {
                             Text("Intensity")
-                                .foregroundStyle(processedImage == nil ? .secondary : .primary)
                             Slider(value: $filterIntensity)
                                 .onChange(of: filterIntensity, applyProcessing)
-                                .disabled(processedImage == nil)
                         }
                     }
                     
                     if inputKeys.contains(kCIInputRadiusKey) {
                         HStack {
                             Text("Radius")
-                                .foregroundStyle(processedImage == nil ? .secondary : .primary)
                             Slider(value: $filterRadius)
                                 .onChange(of: filterRadius, applyProcessing)
-                                .disabled(processedImage == nil)
                         }
                     }
                     
                     if inputKeys.contains(kCIInputScaleKey) {
                         HStack {
                             Text("Scale")
-                                .foregroundStyle(processedImage == nil ? .secondary : .primary)
                             Slider(value: $filterScale)
                                 .onChange(of: filterScale, applyProcessing)
-                                .disabled(processedImage == nil)
                         }
                     }
                     
                     if inputKeys.contains(kCIInputAngleKey) {
                         HStack {
                             Text("Angle")
-                                .foregroundStyle(processedImage == nil ? .secondary : .primary)
                             Slider(value: $filterAngle)
                                 .onChange(of: filterAngle, applyProcessing)
-                                .disabled(processedImage == nil)
                         }
                     }
                 }
                 .padding(.vertical)
+                .disabled(processedImage == nil)
                 
                 HStack {
                     Button("Change Filter", action: changeFilter)
