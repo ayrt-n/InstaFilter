@@ -17,10 +17,14 @@ struct ContentView: View {
     
     @State private var processedImage: Image?
     @State private var filterIntensity = 0.5
+    @State private var filterRadius = 0.5
+    @State private var filterScale = 0.5
+    @State private var filterAngle = 0.5
     
     @State private var selectedItem: PhotosPickerItem?
     
     @State private var currentFilter: CIFilter = CIFilter.sepiaTone()
+    private var inputKeys: [String] { currentFilter.inputKeys }
     let context = CIContext()
     
     @State private var showingFilters = false
@@ -44,12 +48,46 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                HStack {
-                    Text("Intensity")
-                        .foregroundStyle(processedImage == nil ? .secondary : .primary)
-                    Slider(value: $filterIntensity)
-                        .onChange(of: filterIntensity, applyProcessing)
-                        .disabled(processedImage == nil)
+                VStack {
+                    if inputKeys.contains(kCIInputIntensityKey) {
+                        HStack {
+                            Text("Intensity")
+                                .foregroundStyle(processedImage == nil ? .secondary : .primary)
+                            Slider(value: $filterIntensity)
+                                .onChange(of: filterIntensity, applyProcessing)
+                                .disabled(processedImage == nil)
+                        }
+                    }
+                    
+                    if inputKeys.contains(kCIInputRadiusKey) {
+                        HStack {
+                            Text("Radius")
+                                .foregroundStyle(processedImage == nil ? .secondary : .primary)
+                            Slider(value: $filterRadius)
+                                .onChange(of: filterRadius, applyProcessing)
+                                .disabled(processedImage == nil)
+                        }
+                    }
+                    
+                    if inputKeys.contains(kCIInputScaleKey) {
+                        HStack {
+                            Text("Scale")
+                                .foregroundStyle(processedImage == nil ? .secondary : .primary)
+                            Slider(value: $filterScale)
+                                .onChange(of: filterScale, applyProcessing)
+                                .disabled(processedImage == nil)
+                        }
+                    }
+                    
+                    if inputKeys.contains(kCIInputAngleKey) {
+                        HStack {
+                            Text("Angle")
+                                .foregroundStyle(processedImage == nil ? .secondary : .primary)
+                            Slider(value: $filterAngle)
+                                .onChange(of: filterAngle, applyProcessing)
+                                .disabled(processedImage == nil)
+                        }
+                    }
                 }
                 .padding(.vertical)
                 
@@ -74,6 +112,7 @@ struct ContentView: View {
                 Button("Sepia Tone") { setFilter(CIFilter.sepiaTone()) }
                 Button("Unsharp Mask") { setFilter(CIFilter.unsharpMask()) }
                 Button("Vignette") { setFilter(CIFilter.vignette()) }
+                Button("Hue Adjust") { setFilter(CIFilter.hueAdjust()) }
             }
         }
     }
@@ -95,6 +134,8 @@ struct ContentView: View {
         if inputKeys.contains(kCIInputIntensityKey) { currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey) }
         if inputKeys.contains(kCIInputRadiusKey) { currentFilter.setValue(filterIntensity * 200, forKey: kCIInputRadiusKey) }
         if inputKeys.contains(kCIInputScaleKey) { currentFilter.setValue(filterIntensity * 10, forKey: kCIInputScaleKey) }
+        if inputKeys.contains(kCIInputAngleKey) { currentFilter.setValue(filterIntensity, forKey: kCIInputAngleKey)}
+        
         
         guard let outputImage = currentFilter.outputImage else { return }
         guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return }
@@ -112,7 +153,7 @@ struct ContentView: View {
         loadImage()
         
         filterCount += 1
-        if filterCount >= 2 {
+        if filterCount >= 20 {
             requestReview()
         }
     }
