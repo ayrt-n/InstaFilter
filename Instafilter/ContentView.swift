@@ -17,8 +17,8 @@ struct ContentView: View {
     
     @State private var processedImage: Image?
     @State private var filterIntensity = 0.5
-    @State private var filterRadius = 0.5
-    @State private var filterScale = 0.5
+    @State private var filterRadius = 100
+    @State private var filterScale = 5
     @State private var filterAngle = 0.5
     
     @State private var selectedItem: PhotosPickerItem?
@@ -60,7 +60,7 @@ struct ContentView: View {
                     if inputKeys.contains(kCIInputRadiusKey) {
                         HStack {
                             Text("Radius")
-                            Slider(value: $filterRadius)
+                            Slider(value: $filterRadius, in: 0...200)
                                 .onChange(of: filterRadius, applyProcessing)
                         }
                     }
@@ -68,7 +68,7 @@ struct ContentView: View {
                     if inputKeys.contains(kCIInputScaleKey) {
                         HStack {
                             Text("Scale")
-                            Slider(value: $filterScale)
+                            Slider(value: $filterScale, in: 0...10)
                                 .onChange(of: filterScale, applyProcessing)
                         }
                     }
@@ -125,9 +125,9 @@ struct ContentView: View {
         let inputKeys = currentFilter.inputKeys
 
         if inputKeys.contains(kCIInputIntensityKey) { currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey) }
-        if inputKeys.contains(kCIInputRadiusKey) { currentFilter.setValue(filterIntensity * 200, forKey: kCIInputRadiusKey) }
-        if inputKeys.contains(kCIInputScaleKey) { currentFilter.setValue(filterIntensity * 10, forKey: kCIInputScaleKey) }
-        if inputKeys.contains(kCIInputAngleKey) { currentFilter.setValue(filterIntensity, forKey: kCIInputAngleKey)}
+        if inputKeys.contains(kCIInputRadiusKey) { currentFilter.setValue(filterRadius, forKey: kCIInputRadiusKey) }
+        if inputKeys.contains(kCIInputScaleKey) { currentFilter.setValue(filterScale, forKey: kCIInputScaleKey) }
+        if inputKeys.contains(kCIInputAngleKey) { currentFilter.setValue(filterAngle, forKey: kCIInputAngleKey)}
         
         
         guard let outputImage = currentFilter.outputImage else { return }
